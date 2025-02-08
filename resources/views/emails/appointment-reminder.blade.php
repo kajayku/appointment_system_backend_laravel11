@@ -4,10 +4,10 @@
     <title>Appointment Reminder</title>
 </head>
 <body>
-    <h2>Upcoming Appointment Reminder</h2>
-    <p><strong>Title:</strong> {{ $title }}</p>
-    <p><strong>Description:</strong> {{ $description }}</p>
-    <p><strong>Scheduled Date:</strong> {{ $date }}</p>
-    <p>This is a reminder that your appointment is coming up soon.</p>
+    <p>Dear {{ $name }},</p>
+
+    <p>This is a reminder for your upcoming appointment titled "<strong>{{ $title }}</strong>" scheduled for <strong>{{ $date }}</strong> ({{ $timezone }}).</p>
+
+    <p>Thank you!</p>
 </body>
 </html>

@@ -14,11 +14,13 @@ class AppointmentCanceled extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $appointment;
+    public $appointment; 
+    public $user;
 
-    public function __construct(Appointment $appointment)
+    public function __construct(Appointment $appointment,$user)
     {
         $this->appointment = $appointment;
+        $this->user = $user;
     }
 
     public function envelope(): Envelope
@@ -33,9 +35,10 @@ class AppointmentCanceled extends Mailable
         return new Content(
             view: 'emails.appointment-canceled',
             with: [
+                'name' => $this->user,
                 'title' => $this->appointment->title,
+                'date' => $this->appointment->appointment_date,
                 'description' => $this->appointment->description,
-                'date' => Carbon::parse($this->appointment->appointment_date)->format('Y-m-d H:i:s')
             ]
         );
     }

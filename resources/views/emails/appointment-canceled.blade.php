@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Appointment Canceled</title>
+    <title>Appointment Cancellation</title>
 </head>
 <body>
-    <h2>Appointment Canceled</h2>
-    <p><strong>Title:</strong> {{ $title }}</p>
-    <p><strong>Description:</strong> {{ $description }}</p>
-    <p><strong>Scheduled Date:</strong> {{ $date }}</p>
-    <p>We regret to inform you that this appointment has been canceled.</p>
+    <p>Dear {{ $name }},</p>
+
+    <p>The appointment titled "<strong>{{ $title }}</strong>" scheduled for <strong>{{ $date }}</strong> has been cancelled.</p>
+
+    <p>We regret any inconvenience caused.</p>
+
+    <p>Thank you!</p>
 </body>
 </html>

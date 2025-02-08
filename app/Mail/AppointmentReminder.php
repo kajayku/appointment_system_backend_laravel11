@@ -35,10 +35,12 @@ class AppointmentReminder extends Mailable
         return new Content(
             view: 'emails.appointment-reminder',
             with: [
+                'name' => $this->appointment->user->name,
                 'title' => $this->appointment->title,
                 'description' => $this->appointment->description,
-                'date' => Carbon::parse($this->appointment->appointment_date)->tz($this->timezone)->format('Y-m-d H:i:s')
-            ]
+                'date' => Carbon::parse($this->appointment->appointment_date)->tz($this->timezone)->format('Y-m-d H:i:s'),
+                'timezone' => $this->appointment->timezone,
+                ]
         );
     }
 

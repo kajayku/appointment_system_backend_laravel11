@@ -18,11 +18,13 @@ class AppointmentBooked extends Mailable
 
     public $appointment;
     public $timezone;
+    public $user;
 
-    public function __construct(Appointment $appointment, $timezone)
+    public function __construct(Appointment $appointment, $timezone,$user)
     {
          $this->appointment = $appointment;
          $this->timezone = $timezone;
+         $this->user = $user;
     }
 
     /**
@@ -43,10 +45,13 @@ class AppointmentBooked extends Mailable
         return new Content(
             view: 'emails.appointment-booked',
             with: [
+                'user' => $this->user,
                 'title' => $this->appointment->title,
                 'description' => $this->appointment->description,
                 'date' => Carbon::parse($this->appointment->appointment_date)->tz($this->timezone)->format('Y-m-d H:i:s'),
-                'timezone' => $this->timezone
+                'timezone' => $this->timezone,
+                'description' => $this->appointment->description,
+                'guests' => $this->appointment->guests->pluck('email')->toArray(),
             ]
         );
     }

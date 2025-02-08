@@ -4,10 +4,20 @@
     <title>Appointment Confirmation</title>
 </head>
 <body>
-    <h2>Appointment Confirmation</h2>
-    <p><strong>Title:</strong> {{ $title }}</p>
+    <p>Dear {{ $user }},</p>
+
+    <p>Your appointment titled "<strong>{{ $title }}</strong>" has been successfully booked for <strong>{{ $date }}</strong> ({{ $timezone }}).</p>
+
     <p><strong>Description:</strong> {{ $description }}</p>
-    <p><strong>Date:</strong> {{ $date }} ({{ $timezone }})</p>
-    <p>Thank you for booking your appointment!</p>
+
+    <p><strong>Guests:</strong></p>
+    <ul>
+        @foreach($guests as $guest)
+            <li>{{ $guest }}</li>
+        @endforeach
+    </ul>
+
+    <p>Thank you!</p>
 </body>
 </html>
+

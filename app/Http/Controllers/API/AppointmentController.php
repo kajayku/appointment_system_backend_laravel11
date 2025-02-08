@@ -71,6 +71,7 @@ class AppointmentController extends Controller
             'user_id' => 1,
             'description' => $validated['description'],
             'appointment_date' => $validated['appointment_date'],
+            'status' => 'Booked',
             'reminder_time' => $reminderTime,
         ]);
 
@@ -82,15 +83,15 @@ class AppointmentController extends Controller
                 ]);
             }
         }
-
+         $user = Auth::user()->name;
         // Send Email Notifications
-       // $allRecipients = array_merge([$request->user()->email], $validated['guests'] ?? []);
-        // Mail::to($request->user()->email)->cc($validated['guests'] ?? [])->send(new AppointmentBooked($appointment, $validated['timezone']));
+        $allRecipients = array_merge([$request->user()->email], $validated['guests'] ?? []);
+        Mail::to($request->user()->email)->cc($validated['guests'] ?? [])->send(new AppointmentBooked($appointment, $validated['timezone'],$user));
 
 
         // Dispatch reminder email job
-        // $reminderTimeUtc = $appointmentDateUtc->subMinutes($reminderTime);
-        // SendReminderEmail::dispatch($appointment, $validated['timezone'])->delay($reminderTimeUtc);
+         $reminderTimeUtc = $appointmentDateUtc->subMinutes($reminderTime);
+         SendReminderEmail::dispatch($appointment, $validated['timezone'],$user)->delay($reminderTimeUtc);
 
         return response()->json([
             'message' => 'Appointment booked successfully',
@@ -117,10 +118,10 @@ class AppointmentController extends Controller
     }
 
     $appointment->update(['status' => 'canceled']);
-
+    $user = Auth::user()->name;
     $recipients = array_merge([$request->user()->email], $appointment->guests->pluck('email')->toArray());
 
-    //Mail::to($request->user()->email)->cc($appointment->guests->pluck('email'))->send(new AppointmentCanceled($appointment));
+    Mail::to($request->user()->email)->cc($appointment->guests->pluck('email'))->send(new AppointmentCanceled($appointment,$user));
 
     return response()->json(['message' => 'Appointment canceled successfully.'], 200);
 }
