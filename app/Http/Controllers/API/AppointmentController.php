@@ -46,11 +46,13 @@ class AppointmentController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'appointment_date' => 'required',
+            'appointment_date' => 'required|date|after_or_equal:now',
             'timezone' => 'required|timezone',
             'reminder_time' => 'nullable|integer|min:5|max:1440', 
             'guests' => 'nullable|array',
             'guests.*' => 'email'
+        ], [
+            'appointment_date.after_or_equal' => 'You cannot book an appointment in the past.',
         ]);
 
 
@@ -66,9 +68,20 @@ class AppointmentController extends Controller
 
         $reminderTime = $validated['reminder_time'] ?? 30;
 
+        $user = Auth::user(); 
+
+        $exists = Appointment::where('appointment_date', $request->appointment_date)
+                    ->where('user_id', $user->id)
+                    ->exists();
+
+        if ($exists) {
+            return response()->json(['error' => 'You already have an appointment at this time.'], 422);
+        }
+
+
         $appointment = Appointment::create([
             'title' => $validated['title'],
-            'user_id' => 1,
+            'user_id' => Auth::user()->id,
             'description' => $validated['description'],
             'appointment_date' => $validated['appointment_date'],
             'status' => 'Booked',
